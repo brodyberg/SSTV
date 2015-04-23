@@ -1,5 +1,7 @@
 ﻿// http://mark-dot-net.blogspot.com/2009/10/playback-of-sine-wave-in-naudio.html
 
+//#I "..\..\packages\NAudio.1.7.3\lib\net35\"
+
 open NAudio
 
 [<AbstractClass>]
@@ -14,6 +16,11 @@ type SineWaveProvider32() =
     override this.SetWaveFormat sampleRate channels = ()
     override this.Read(foo: float array * int * int) = 0
     override this.Read(foo: byte array * int * int) = 0
+
+let x = SineWaveProvider32()
+
+
+2 + 2
 
 [<EntryPoint>]
 let main argv = 
