@@ -21,8 +21,7 @@ type SineWaveProvider() =
 
     member this.Frequency = frequency
     member this.Amplitude = amplitude
-
-    override this.Read() = -1
+    override this.Read(buffer:float32 [], offset:int, sampleCount:int) = -1
 
 
 
