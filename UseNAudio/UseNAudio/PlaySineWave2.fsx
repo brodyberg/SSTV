@@ -1,15 +1,7 @@
-﻿
-// float Frequency
-// float Amplitude
-
-// empty ctor
-// derives WaveProvider32
-
-// overrides Read(float array * int * int) -> int
-
-#I @"..\packages\NAudio.1.7.3\lib\net35\"
+﻿#I @"..\packages\NAudio.1.7.3\lib\net35\"
 #r "NAudio.dll"
 
+open System
 open NAudio
 open NAudio.Wave
 
@@ -17,14 +9,29 @@ type SineWaveProvider() =
     inherit NAudio.Wave.WaveProvider32()
 
     let frequency = 1000.0
-    let amplitude = 0.25f
+    let amplitude = 0.25
+
+    let mutable sample = 0.0
+
+    let sin32 a = (float32) (System.Math.Sin a)
+    let iterateAndCapSample sampleRate =
+        sample <- sample + 1.0
+
+        if sample >= (float) sampleRate
+        then sample <- 0.0
 
     member this.Frequency = frequency
     member this.Amplitude = amplitude
-    override this.Read(buffer:float32 [], offset:int, sampleCount:int) = -1
+    override this.Read(buffer:float32 [], offset:int, sampleCount:int) =
+        let sampleRate = base.WaveFormat.SampleRate
 
+        seq { for i in 0 .. sampleCount -> 
+                iterateAndCapSample sampleRate
+                sin32 (2.0 * Math.PI * sample * this.Frequency)
+            }
+        |> Seq.iteri (fun i item -> buffer.[i+offset] <- (float32) item)
 
-
+        sampleCount
 
 
 
